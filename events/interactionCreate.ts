@@ -1,11 +1,20 @@
-import { CommandInteraction, SlashCommandBuilder } from "discord.js";
+import { CommandInteraction, Events, SlashCommandBuilder } from "discord.js";
+import type Event from "../interfaces/Event";
 
 export default {
-    data: new SlashCommandBuilder()
-        .setName('help')
-        .setDescription('List all of my commands or info about a specific command.'),
+    name: Events.InteractionCreate,
+	
+	execute: async (interaction: CommandInteraction) => {
+		if (!interaction.isCommand()) return;
 
-    async execute(interaction: CommandInteraction) {
-        await interaction.reply('Help command');
-    }
-}
+		const command = interaction.client.commands.get(interaction.commandName);
+		if (!command) return;
+
+		try {
+			await command.execute(interaction);
+		} catch (error) {
+			console.error(error);
+			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+		}
+	}
+} as Event;

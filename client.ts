@@ -1,9 +1,5 @@
 import { Client, Collection, CommandInteraction, SlashCommandBuilder, type ClientOptions } from "discord.js";
-
-interface Command {
-    data: SlashCommandBuilder;
-    execute: (interaction: CommandInteraction) => void;
-}
+import type Command from "./interfaces/Command";
 
 export class SeiyuuClient extends Client {
     public commands: Collection<string, Command> = new Collection();
