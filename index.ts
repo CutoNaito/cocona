@@ -23,10 +23,6 @@ const client = new SeiyuuClient({
     intents: [GatewayIntentBits.Guilds],
 }, commands, events);
 
-client.once(Events.ClientReady, (c) => {
-    console.log(`Logged in as ${c.user?.tag}`);
-});
-
 connect(process.env.MONGO_URI)
 	.then(() => {
 		console.log(colors.cyan('Connected to MongoDB'));
