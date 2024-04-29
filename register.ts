@@ -1,4 +1,4 @@
-import { cyan } from "colors/safe";
+import colors from "colors/safe";
 import { REST, Routes, type RESTPutAPIApplicationCommandsResult } from "discord.js";
 import { commands } from ".";
 
@@ -13,7 +13,7 @@ const rest = new REST().setToken(process.env.DISCORD_TOKEN);
 // and deploy your commands!
 (async () => {
 	try {
-		console.log(cyan(`Started refreshing ${commands.length} application (/) commands.`));
+		console.log(colors.cyan(`Started refreshing ${commands.length} application (/) commands.`));
 		
 		if (!process.env.CLIENT_ID) {
 			console.error('No client ID provided');
