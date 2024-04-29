@@ -11,7 +11,7 @@ export class SeiyuuClient extends Client {
 
         for (const command of commands) {
             this.commands.set(command.data.name, command);
-			colors.green(`Loaded command: ${command.data.name}`);
+			console.log(colors.green(`Loaded command: ${command.data.name}`));
         }
 
 		for (const event of events) {
@@ -21,7 +21,7 @@ export class SeiyuuClient extends Client {
 				this.on(event.name, (...args) => event.execute(...args, this));
 			}
 
-			colors.green(`Loaded event: ${event.name}`);
+			console.log(colors.green(`Loaded event: ${event.name}`));
 		}
     }
 }
