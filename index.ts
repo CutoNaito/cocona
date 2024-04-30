@@ -1,10 +1,12 @@
 import { Client, Events, GatewayIntentBits } from 'discord.js';
 import help from './commands/help';
+import addSeiyuu from './commands/addSeiyuu';
 import { SeiyuuClient } from './client';
 import interactionCreate from './events/interactionCreate';
 import ready from './events/ready';
 import { connect } from 'mongoose';
 import colors from 'colors/safe';
+import roll from './commands/roll';
 
 if (!process.env.DISCORD_TOKEN) {
 	console.error('No token provided');
@@ -16,7 +18,7 @@ if (!process.env.MONGO_URI) {
 	process.exit(1);
 }
 
-export const commands = [help];
+export const commands = [help, roll, addSeiyuu];
 const events = [ready, interactionCreate];
 
 const client = new SeiyuuClient({

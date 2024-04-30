@@ -1,19 +1,20 @@
-import { Schema, model } from "mongoose";
+import { Types, Schema, model } from "mongoose";
 
 interface IUser {
-    name: string,
-    seiyuus: string[],
+    discord_id: string,
+    seiyuus: Types.ObjectId[],
     tatemae: number
 };
 
 const UserSchema = new Schema({
-    name: {
+    discord_id: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
 
     seiyuus: [{
-        type: Schema.Types.ObjectId,
+        type: Types.ObjectId,
         ref: 'Seiyuu'
     }],
 
