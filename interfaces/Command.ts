@@ -1,6 +1,6 @@
-import type { CommandInteraction, SlashCommandBuilder } from "discord.js";
+import type { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
 
 export default interface Command {
-	data: SlashCommandBuilder;
-    execute: (interaction: CommandInteraction) => void;
+	data: SlashCommandBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
+    execute: (interaction: ChatInputCommandInteraction) => void;
 }

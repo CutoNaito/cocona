@@ -3,7 +3,7 @@ import { Schema, model } from "mongoose";
 interface ISeiyuu {
     name: string,
     picture: string,
-    favorites: number
+    tatemae: number
 };
 
 const SeiyuuSchema = new Schema({
@@ -17,7 +17,7 @@ const SeiyuuSchema = new Schema({
         required: true
     },
 
-    favorites: {
+    tatemae: {
         type: Number,
         default: 0
     }
