@@ -7,6 +7,8 @@ import ready from './events/ready';
 import { connect } from 'mongoose';
 import colors from 'colors/safe';
 import roll from './commands/roll';
+import viewClaimed from './commands/viewClaimed';
+import dump from './commands/dump';
 
 if (!process.env.DISCORD_TOKEN) {
 	console.error('No token provided');
@@ -18,7 +20,7 @@ if (!process.env.MONGO_URI) {
 	process.exit(1);
 }
 
-export const commands = [help, roll, addSeiyuu];
+export const commands = [help, roll, addSeiyuu, viewClaimed, dump];
 const events = [ready, interactionCreate];
 
 const client = new SeiyuuClient({
