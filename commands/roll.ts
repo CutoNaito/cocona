@@ -2,6 +2,8 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors, CommandInteractio
 import type Command from "../interfaces/Command";
 import User from "../models/User";
 import Seiyuu from "../models/Seiyuu";
+import Servers from "../models/Servers";
+import { type Claim } from "../models/Servers";
 
 export default {
     data: new SlashCommandBuilder()
@@ -16,9 +18,31 @@ export default {
             return interaction.reply("Something went wrong. Please try again.");
         }
 
+        var server = await Servers.findOne({ server_id: interaction.guildId });
+
+        if (server) {
+            const claim = server.claims.find(claim => claim.seiyuu.toString() === randomSeiyuu._id.toString());
+            const user = await User.findOne({ discord_id: interaction.user.id });
+
+            if (!user) {
+                return interaction.reply("Something went wrong. Please try again.");
+            }
+
+            if (claim) {
+                return interaction.reply({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setTitle(randomSeiyuu.name)
+                            .setImage(randomSeiyuu.picture)
+                            .setColor(Colors.Red)
+                            .setDescription("Claimed by " + `<@${user.discord_id.toString()}>`)
+                    ]
+                });
+            }
+        }
+
         const embed = new EmbedBuilder()
             .setTitle(randomSeiyuu.name)
-            .setDescription("Tatemae: " + randomSeiyuu.tatemae)
             .setImage(randomSeiyuu.picture)
 
         const claimButton = new ButtonBuilder()
@@ -33,28 +57,62 @@ export default {
             components: [row]
         });
 
-        const collected = await response.awaitMessageComponent({
-            filter: i => i.customId === "claim",
-                time: 15000
-        });
+        try {
+            const collected = await response.awaitMessageComponent({
+                filter: i => i.customId === "claim",
+                    time: 15000
+            });
 
-        if (collected.customId === "claim") {
-            var user = await User.findOne({ discord_id: interaction.user.id });
+            if (collected.customId === "claim") {
+                var user = await User.findOne({ discord_id: collected.user.id });
 
-            if (!user) {
-                user = new User({
-                    discord_id: interaction.user.id,
-                    seiyuus: [randomSeiyuu._id]
+                // checks if server exists in the databvase
+                if (!server) {
+                    server = new Servers({
+                        server_id: interaction.guildId
+                    });
+
+                    await server.save();
+                }
+
+                // checks if user EXISTS i nthe datasbasd
+                if (!user) {
+                    user = new User({
+                        discord_id: collected.user.id,
+                    });
+
+                    await user.save();
+
+                    const claim: Claim = {
+                        user: user._id,
+                        seiyuu: randomSeiyuu._id
+                    }
+
+                    server.claims.push(claim);
+
+                    await server.save();
+                } else {
+                    const claim: Claim = {
+                        user: user._id,
+                        seiyuu: randomSeiyuu._id
+                   }
+
+                   server.claims.push(claim);
+
+                   await server.save();
+                }
+
+                await interaction.editReply({
+                    embeds: [embed
+                        .setColor(Colors.Green)
+                        .setDescription("Claimed by " + `${collected.user}`)
+                    ],
+                    components: []
                 });
-
-                await user.save();
-            } else {
-                user.seiyuus.push(randomSeiyuu._id);
-                await user.save();
             }
-
+        } catch (error) {
             await interaction.editReply({
-                embeds: [embed.setColor(Colors.Green)],
+                embeds: [embed],
                 components: []
             });
         }
