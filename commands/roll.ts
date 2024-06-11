@@ -20,9 +20,14 @@ export default {
 
         var server = await Servers.findOne({ server_id: interaction.guildId });
 
-        if (server) {
+        claim_check: if (server) {
             const claim = server.claims.find(claim => claim.seiyuu.toString() === randomSeiyuu._id.toString());
-            const user = await User.findOne({ discord_id: interaction.user.id });
+
+            if (!claim) {
+                break claim_check;
+            }
+
+            const user = await User.findOne({ _id: claim?.user });
 
             if (!user) {
                 return interaction.reply("Something went wrong. Please try again.");
