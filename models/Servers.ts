@@ -7,7 +7,8 @@ export type Claim = {
 
 interface IServer {
     server_id: string,
-    claims: Claim[]
+    claims: Claim[],
+    wishes: Claim[]
 };
 
 const ServerSchema = new Schema({
@@ -22,6 +23,21 @@ const ServerSchema = new Schema({
             ref: 'User',
             required: true
         },
+
+        seiyuu: {
+            type: Types.ObjectId,
+            ref: 'Seiyuu',
+            required: true
+        }
+    }],
+
+    wishes: [{
+        user: {
+            type: Types.ObjectId,
+            ref: 'User',
+            required: true
+        },
+
         seiyuu: {
             type: Types.ObjectId,
             ref: 'Seiyuu',
