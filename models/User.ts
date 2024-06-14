@@ -2,7 +2,8 @@ import { Types, Schema, model } from "mongoose";
 
 interface IUser {
     discord_id: string,
-    tatemae: number
+    tatemae: number,
+    rolls: number
 };
 
 const UserSchema = new Schema({
@@ -15,7 +16,12 @@ const UserSchema = new Schema({
     tatemae: {
         type: Number,
         default: 0
-    }
+    },
+
+    rolls: {
+        type: Number,
+        default: 10
+    },
 });
 
 export default model<IUser>('User', UserSchema);

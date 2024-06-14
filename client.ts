@@ -25,3 +25,5 @@ export class SeiyuuClient extends Client {
 		}
     }
 }
+
+console.log()

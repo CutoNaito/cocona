@@ -19,6 +19,18 @@ export default {
         }
 
         var server = await Servers.findOne({ server_id: interaction.guildId });
+        var interaction_user = await User.findOne({ discord_id: interaction.user.id });
+
+        if (!interaction_user) {
+            return interaction.reply("Something went wrong. Please try again.");
+        }
+
+        if (interaction_user.rolls == 0) {
+            return interaction.reply("You don't have any rolls left.");
+        }
+
+        interaction_user.rolls -= 1;
+        await interaction_user.save();
 
         claim_check: if (server) {
             const claim = server.claims.find(claim => claim.seiyuu.toString() === randomSeiyuu._id.toString());
