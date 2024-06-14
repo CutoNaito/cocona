@@ -47,6 +47,7 @@ client.on(Events.ClientReady, () => {
         Users.then((users) => {
             users.forEach((user) => {
                 user.rolls = 10;
+                user.can_claim = true;
                 user.save();
             })
         })
