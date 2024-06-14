@@ -11,6 +11,8 @@ import viewClaimed from './commands/viewClaimed';
 import dump from './commands/dump';
 import wish from './commands/wish';
 import viewWished from './commands/viewWished';
+import User from './models/User';
+import cooldown from './commands/cooldown';
 
 if (!process.env.DISCORD_TOKEN) {
 	console.error('No token provided');
@@ -22,7 +24,7 @@ if (!process.env.MONGO_URI) {
 	process.exit(1);
 }
 
-export const commands = [help, roll, addSeiyuu, viewClaimed, dump, wish, viewWished];
+export const commands = [help, roll, addSeiyuu, viewClaimed, dump, wish, viewWished, cooldown];
 const events = [ready, interactionCreate];
 
 const client = new SeiyuuClient({
@@ -37,3 +39,16 @@ connect(process.env.MONGO_URI)
 	.catch((err) => {
 		console.error(err);
 	});
+
+client.on(Events.ClientReady, () => {
+    setInterval(() => {
+        var Users = User.find();
+        // set all users' rolls to 10
+        Users.then((users) => {
+            users.forEach((user) => {
+                user.rolls = 10;
+                user.save();
+            })
+        })
+    }, 1000 * 60 * 60);
+})
