@@ -108,7 +108,14 @@ export default {
                     server.claims.push(claim);
 
                     await server.save();
+
+                    user.can_claim = false;
+                    await user.save();
                 } else {
+                    if (!user.can_claim) {
+                        return interaction.reply("You can't claim right now.");
+                    };
+
                     const claim: Claim = {
                         user: user._id,
                         seiyuu: randomSeiyuu._id
@@ -117,6 +124,9 @@ export default {
                    server.claims.push(claim);
 
                    await server.save();
+
+                   user.can_claim = false;
+                   await user.save();
                 }
 
                 await interaction.editReply({
