@@ -22,7 +22,11 @@ export default {
         var interaction_user = await User.findOne({ discord_id: interaction.user.id });
 
         if (!interaction_user) {
-            return interaction.reply("Something went wrong. Please try again.");
+            interaction_user = new User({
+                discord_id: interaction.user.id
+            });
+
+            await interaction_user.save();
         }
 
         if (interaction_user.rolls == 0) {
