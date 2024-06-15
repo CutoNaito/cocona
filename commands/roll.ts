@@ -117,7 +117,15 @@ export default {
                     await user.save();
                 } else {
                     if (!user.can_claim) {
-                        return interaction.reply("You can't claim right now.");
+                        const message = await interaction.followUp({
+                            content: "You can't claim right now."
+                        });
+
+                        setTimeout(() => {
+                            message.delete();
+                        }, 5000);
+
+                        return;
                     };
 
                     const claim: Claim = {
