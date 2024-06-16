@@ -10,32 +10,37 @@ export default {
         .setDescription("Shows a list of wished seiyuus for a user."),
 
     async execute(interaction: CommandInteraction) {
-        const user = await User.findOne({ discord_id: interaction.user.id });
-        const server = await Servers.findOne({ server_id: interaction.guildId });
-        var seiyuuList: string[] = [];
+        try {
+            const user = await User.findOne({ discord_id: interaction.user.id });
+            const server = await Servers.findOne({ server_id: interaction.guildId });
+            var seiyuuList: string[] = [];
 
-        if (server && user) {
-            for (let i = 0; i < server.wishes.length; i++) {
-                if (server.wishes[i].user.toString() === user._id.toString()) {
-                    const seiyuu = await Seiyuu.findOne({ _id: server.wishes[i].seiyuu });
-                    if (!seiyuu) continue;
-                    seiyuuList.push(seiyuu.name);
+            if (server && user) {
+                for (let i = 0; i < server.wishes.length; i++) {
+                    if (server.wishes[i].user.toString() === user._id.toString()) {
+                        const seiyuu = await Seiyuu.findOne({ _id: server.wishes[i].seiyuu });
+                        if (!seiyuu) continue;
+                        seiyuuList.push(seiyuu.name);
+                    }
                 }
             }
-        }
 
-        const embed = new EmbedBuilder()
+            const embed = new EmbedBuilder()
             .setColor(Colors.DarkVividPink)
             .setTitle("Wished Seiyuus")
 
-        if (seiyuuList.length > 0) {
-            embed.setDescription(
-                seiyuuList.join("\n")
-            );
-        }
+            if (seiyuuList.length > 0) {
+                embed.setDescription(
+                    seiyuuList.join("\n")
+                );
+            }
 
-        await interaction.reply({
-            embeds: [embed],
-        });
+            await interaction.reply({
+                embeds: [embed],
+            });
+        } catch (err) {
+            console.error(err);
+            interaction.reply("An error occurred while trying to fetch your wished seiyuus.");
+        }
     }
 } as Command

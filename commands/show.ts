@@ -7,8 +7,8 @@ import { type Claim } from "../models/Servers";
 
 export default {
     data: new SlashCommandBuilder()
-        .setName("dump")
-        .setDescription("Removes a seiyuu from your claimed list.")
+        .setName("show")
+        .setDescription("Shows a seiyuu.")
         .addStringOption(option =>
             option.setName("seiyuu")
                 .setDescription("The seiyuu's name.")
@@ -18,16 +18,6 @@ export default {
     async execute(interaction: ChatInputCommandInteraction) {
         try {
             const seiyuu_name = interaction.options.getString("seiyuu") as string;
-            const user = await User.findOne({ discord_id: interaction.user.id });
-
-            if (!user) {
-                interaction.reply({
-                    content: "You need to claim a seiyuu first!",
-                });
-
-                return;
-            };
-
             const seiyuu = await Seiyuu.findOne({ name: seiyuu_name });
 
             if (!seiyuu) {
@@ -48,33 +38,31 @@ export default {
             return;
             };
 
-            const claim = server.claims.find((claim: Claim) => claim.user.toString() === user._id.toString() && claim.seiyuu.toString() === seiyuu._id.toString());
+            const claim = server.claims.find((claim: Claim) => claim.seiyuu.toString() === seiyuu._id.toString());
 
-            if (!claim) {
-                interaction.reply({
-                    content: "You haven't claimed this seiyuu.",
-                });
+            const embed = new EmbedBuilder()
+                .setTitle(seiyuu.name)
+                .setImage(seiyuu.picture)
+                .setColor(Colors.Purple);
 
-                return;
-            };
+            if (claim) {
+                const user = await User.findOne({ _id: claim.user });
 
-            const index = server.claims.indexOf(claim);
-            if (index > -1) {
-                server.claims.splice(index, 1);
-
-                server.save()
-                .then(() => {
+                if (!user) {
                     interaction.reply({
-                        content: `Seiyuu ${seiyuu_name} removed successfully!`,
+                        content: "An error occurred while trying to fetch the user.",
                     });
-                })
-                .catch((err) => {
-                    console.error(err);
-                    interaction.reply({
-                        content: "An error occurred while trying to remove the seiyuu.",
-                    });
-                });
+
+                    return;
+                };
+
+                embed.setDescription("Claimed by " + `<@${user.discord_id.toString()}>`);
             }
+
+            await interaction.reply({
+                embeds: [embed],
+            });
+
         } catch (err) {
             console.error(err);
             interaction.reply({
