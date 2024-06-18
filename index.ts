@@ -14,6 +14,7 @@ import viewWished from './commands/viewWished';
 import User from './models/User';
 import cooldown from './commands/cooldown';
 import show from './commands/show';
+import trade from './commands/trade';
 
 if (!process.env.DISCORD_TOKEN) {
 	console.error('No token provided');
@@ -25,7 +26,7 @@ if (!process.env.MONGO_URI) {
 	process.exit(1);
 }
 
-export const commands = [help, roll, addSeiyuu, viewClaimed, dump, wish, viewWished, cooldown, show];
+export const commands = [help, roll, addSeiyuu, viewClaimed, dump, wish, viewWished, cooldown, show, trade];
 const events = [ready, interactionCreate];
 
 const client = new SeiyuuClient({

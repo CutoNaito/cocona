@@ -2,6 +2,7 @@ import { Types, Schema, model } from "mongoose";
 
 interface IUser {
     discord_id: string,
+    username: string,
     tatemae: number,
     rolls: number,
     can_claim: boolean
@@ -12,6 +13,11 @@ const UserSchema = new Schema({
         type: String,
         required: true,
         unique: true
+    },
+
+    username: {
+        type: String,
+        required: true
     },
 
     tatemae: {

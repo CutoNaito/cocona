@@ -24,7 +24,8 @@ export default {
 
                 if (!interaction_user) {
                     interaction_user = new User({
-                        discord_id: interaction.user.id
+                        discord_id: interaction.user.id,
+                        username: interaction.user.username
                     });
 
                     await interaction_user.save();
@@ -101,6 +102,7 @@ export default {
                         if (!user) {
                             user = new User({
                                 discord_id: collected.user.id,
+                                username: collected.user.username
                             });
 
                             await user.save();
