@@ -114,36 +114,50 @@ export default {
                 var interaction_user = await User.findOne({ discord_id: trade.user.id });
 
                 if (trade.customId == "yes") {
-                    if (interaction_user && interaction_user._id.toString() == other_user._id.toString()) {
-                        your_claimed.seiyuu = their_seiyuu._id;
-                        their_claimed.seiyuu = your_seiyuu._id;
+                    try {
+                        if (interaction_user && interaction_user._id.toString() == other_user._id.toString()) {
+                            your_claimed.seiyuu = their_seiyuu._id;
+                            their_claimed.seiyuu = your_seiyuu._id;
 
-                        await server.save();
+                            await server.save();
 
-                        await response.edit({
-                            content: "Trade successful.",
-                            components: []
-                        });
-                    } else {
-                        await interaction.followUp({
-                            content: "You are not the user the trade is meant for.",
-                            ephemeral: true
+                            await response.edit({
+                                content: "Trade successful.",
+                                components: []
+                            });
+                        } else {
+                            await interaction.followUp({
+                                content: "You are not the user the trade is meant for.",
+                                    ephemeral: true
+                            });
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        interaction.reply({
+                            content: "An error occurred while trying to trade the seiyuu.",
                         });
                     }
                 }
 
                 if (trade.customId == "no") {
-                    if (interaction_user && interaction_user._id.toString() == other_user._id.toString()) {
-                        await response.edit({
-                            content: "Trade cancelled.",
-                            components: []
-                        });
+                    try {
+                        if (interaction_user && interaction_user._id.toString() == other_user._id.toString()) {
+                            await response.edit({
+                                content: "Trade cancelled.",
+                                components: []
+                            });
 
-                        return;
-                    } else {
-                        await interaction.followUp({
-                            content: "You are not the user the trade is meant for.",
-                            ephemeral: true
+                            return;
+                        } else {
+                            await interaction.followUp({
+                                content: "You are not the user the trade is meant for.",
+                                    ephemeral: true
+                            });
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        interaction.reply({
+                            content: "An error occurred while trying to trade the seiyuu.",
                         });
                     }
                 }
