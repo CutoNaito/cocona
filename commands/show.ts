@@ -43,6 +43,7 @@ export default {
             const embed = new EmbedBuilder()
                 .setTitle(seiyuu.name)
                 .setImage(seiyuu.picture)
+                .setDescription(`${seiyuu.tatemae}:cherry_blossom:`)
                 .setColor(Colors.Purple);
 
             if (claim) {
@@ -56,7 +57,7 @@ export default {
                     return;
                 };
 
-                embed.setDescription("Claimed by " + `<@${user.discord_id.toString()}>`);
+                embed.setDescription(`${seiyuu.tatemae}:cherry_blossom:\n\n` + "Claimed by " + `<@${user.discord_id.toString()}>`);
             }
 
             await interaction.reply({

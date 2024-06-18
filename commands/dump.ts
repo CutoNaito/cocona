@@ -63,9 +63,13 @@ export default {
                 server.claims.splice(index, 1);
 
                 server.save()
+
                 .then(() => {
+                    user.tatemae += seiyuu.tatemae;
+                    user.save();
+
                     interaction.reply({
-                        content: `Seiyuu ${seiyuu_name} removed successfully!`,
+                        content: `Seiyuu ${seiyuu_name} removed successfully!\nYou now have ${user.tatemae}:cherry_blossom:`,
                     });
                 })
                 .catch((err) => {

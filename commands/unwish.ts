@@ -7,8 +7,8 @@ import { type Claim } from "../models/Servers";
 
 export default {
     data: new SlashCommandBuilder()
-    .setName("wish")
-    .setDescription("Wish a seiyuu.")
+    .setName("unwish")
+    .setDescription("Remove a seiyuu from your wishlist.")
     .addStringOption(option =>
                      option.setName("seiyuu")
                      .setDescription("The seiyuu's name.")
@@ -45,26 +45,21 @@ export default {
 
                             const wishExists = server.wishes.find(wish => wish.user.toString() === user?._id.toString() && wish.seiyuu.toString() === seiyuu._id.toString());
 
-                            if (wishExists) {
-                                await interaction.reply({ content: "You have already wished this seiyuu.", ephemeral: true });
+                            if (!wishExists) {
+                                await interaction.reply({ content: "You don't have this seiyuu in your wishlist.", ephemeral: true });
                                 return;
                             }
 
-                            const wish: Claim = {
-                                user: user._id,
-                                seiyuu: seiyuu._id
-                            };
-
-                            server.wishes.push(wish);
+                            server.wishes = server.wishes.filter(wish => wish.user.toString() !== user?._id.toString() || wish.seiyuu.toString() !== seiyuu._id.toString());
 
                             await server.save();
 
-                            seiyuu.tatemae += 30;
+                            seiyuu.tatemae -= 30;
 
                             await seiyuu.save();
 
                             await interaction.reply({
-                                content: `Wished ${seiyuu.name} successfully.`,
+                                content: `Removed ${seiyuu.name} from your wishlist successfully.`,
                                 ephemeral: true
                             });
                         } catch (err) {

@@ -58,7 +58,7 @@ export default {
                                 .setTitle(randomSeiyuu.name)
                                 .setImage(randomSeiyuu.picture)
                                 .setColor(Colors.Red)
-                                .setDescription("Claimed by " + `<@${user.discord_id.toString()}>`)
+                                .setDescription(`${randomSeiyuu.tatemae}:cherry_blossom:\n\n` + "Claimed by " + `<@${user.discord_id.toString()}>`)
                             ]
                         });
                     }
@@ -67,6 +67,7 @@ export default {
                 const embed = new EmbedBuilder()
                 .setTitle(randomSeiyuu.name)
                 .setImage(randomSeiyuu.picture)
+                .setDescription(`${randomSeiyuu.tatemae}:cherry_blossom:`)
 
                 const claimButton = new ButtonBuilder()
                 .setCustomId("claim")
@@ -147,7 +148,7 @@ export default {
                         await interaction.editReply({
                             embeds: [embed
                                 .setColor(Colors.Green)
-                                .setDescription("Claimed by " + `${collected.user}`)
+                                .setDescription(`${randomSeiyuu.tatemae}:cherry_blossom:\n\n` + "Claimed by " + `${collected.user}`)
                             ],
                             components: []
                         });
